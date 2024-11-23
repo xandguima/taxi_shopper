@@ -1,0 +1,38 @@
+{
+  "name": "api_routes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "knex": "node --import tsx ./node_modules/.bin/knex",
+    "migrate-dev": "npm run knex -- migrate:latest --knexfile ./src/knexfile.ts",
+    "seed-dev": "npm run knex -- seed:run --knexfile ./src/knexfile.ts",
+
+    "migrate-prod": "npx knex migrate:latest --knexfile ./backend/dist/knexfile.js",
+    "seed-prod": "npx knex seed:run --knexfile ./backend/dist/knexfile.js",
+    "start": "node ./backend/dist/server.js",
+    "build": "tsup src --out-dir dist && tsup src/knexfile.ts --out-dir ./dist"
+    
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.1.0",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/knex": "^0.15.2",
+    "@types/node": "^22.9.1",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
