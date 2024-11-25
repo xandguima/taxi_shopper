@@ -26,11 +26,11 @@ export class RideController {
 
 
       //Busca as coordenadas
-      const originLatLng = await gcpService.catchLatLng(origin);
-      const destinationLatLng = await gcpService.catchLatLng(destination);
+      const originLatLng = await gcpService.getCoordinatesFromAddress(origin);
+      const destinationLatLng = await gcpService.getCoordinatesFromAddress(destination);
 
       // Busca a rota
-      const route = await gcpService.catchDirection(
+      const route = await gcpService.getRoute(
         originLatLng.lat,
         originLatLng.lng,
         destinationLatLng.lat,
@@ -129,8 +129,8 @@ export class RideController {
       const body = checkConfirmPostSchema.parse(request.body);
       const { customer_id, origin, destination, distance, duration, driver, value } = body;
 
-      const originLatLng = await gcpService.catchLatLng(origin);
-      const destinationLatLng = await gcpService.catchLatLng(destination);
+      const originLatLng = await gcpService.getCoordinatesFromAddress(origin);
+      const destinationLatLng = await gcpService.getCoordinatesFromAddress(destination);
 
       if (originLatLng.lat === destinationLatLng.lat && originLatLng.lng === destinationLatLng.lng) {
         return reply.status(400).send({
