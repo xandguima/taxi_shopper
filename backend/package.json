@@ -7,18 +7,18 @@
     "knex": "node --import tsx ./node_modules/.bin/knex",
     "migrate-dev": "npm run knex -- migrate:latest --knexfile ./src/knexfile.ts",
     "seed-dev": "npm run knex -- seed:run --knexfile ./src/knexfile.ts",
-
-    "migrate-prod": "npx knex migrate:latest --knexfile ./backend/dist/knexfile.js",
-    "seed-prod": "npx knex seed:run --knexfile ./backend/dist/knexfile.js",
-    "start": "node ./backend/dist/server.js",
-    "build": "tsup src --out-dir dist && tsup src/knexfile.ts --out-dir ./dist"
     
+    "migrate-prod": "npx knex migrate:latest --knexfile ./dist/knexfile.js",
+    "seed-prod": "npx knex seed:run --knexfile ./dist/knexfile.js",
+    "start": "node ./dist/server.js",
+    "build": "tsup src --out-dir dist && tsup src/knexfile.ts --out-dir ./dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@fastify/cors": "^10.0.1",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "fastify": "^5.1.0",
