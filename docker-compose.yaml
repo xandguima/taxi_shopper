@@ -3,7 +3,7 @@ version: '3.8'
 services:
   api:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: taxi_shopper_api
     environment:
@@ -13,6 +13,19 @@ services:
     networks:
       - api_routes_network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taxi_shopper_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api # Garantir que a API tenha iniciado antes de iniciar o frontend
+    entrypoint: ["sh", "-c", "wait-for-it api:8080 -- serve "]
+    restart: always
+    networks:
+      - api_routes_network
 networks:
   api_routes_network:
     driver: bridge
