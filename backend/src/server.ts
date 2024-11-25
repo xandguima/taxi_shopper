@@ -1,14 +1,19 @@
 import fastify from 'fastify';
 import { rideRoutes } from './routes/rideRoutes';
-import { FastifyReply } from 'fastify';
-//import cookie from '@fastify/cookie';
+import cors from '@fastify/cors';
 
 
 const app = fastify()
-//app.register(cookie);
+
+
+
+app.register(cors, {
+  origin: 'http://localhost:3000', 
+  methods: ['GET', 'POST'],
+});
 
 app.get('/', async (request, reply) => {
-  return reply.send({ hello: 'world' });
+  return reply.send("API rodando");
 })
 
 app.register(rideRoutes, {
