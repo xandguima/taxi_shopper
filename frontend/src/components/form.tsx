@@ -11,6 +11,7 @@ export function AdressForm({ onEstimateClick }: AdressFormsProps) {
   const [loading, setLoading] = useState(false); // Estado de carregamento
 
   async function handleEstimateClick() {
+    console.log("Estimando", adress_origin, adress_destination, "tipos", typeof (adress_origin), typeof (adress_destination));
     setLoading(true); // Ativa o estado de carregamento
     try {
       await onEstimateClick(adress_origin, adress_destination); // Espera a função assíncrona ser concluída
@@ -27,7 +28,6 @@ export function AdressForm({ onEstimateClick }: AdressFormsProps) {
       <div>
         <label htmlFor="adress_origin" className="block text-sm font-medium text-white">Endereço de Origem</label>
         <input
-          type="text"
           id="adress_origin"
           name="adress_origin"
           className="text-black bg-white mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -39,7 +39,6 @@ export function AdressForm({ onEstimateClick }: AdressFormsProps) {
       <div>
         <label htmlFor="adress_destination" className="block text-sm font-medium text-white">Endereço de Destino</label>
         <input
-          type="text"
           id="adress_destination"
           name="adress_destination"
           className="text-black bg-white mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"

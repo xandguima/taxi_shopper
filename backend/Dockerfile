@@ -1,3 +1,5 @@
+
+#MultStageBuild
 # Etapa 1: Construir a aplicação TypeScript
 FROM node:20 AS builder
 
@@ -14,7 +16,7 @@ COPY ./ /app
 WORKDIR /app
 RUN npm run build
 
-# Etapa 2: Criar a imagem final com apenas os arquivos necessários
+# Stage 2: Criar a imagem final com apenas os arquivos necessários
 FROM node:20 AS runner
 
 WORKDIR /app

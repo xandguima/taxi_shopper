@@ -1,15 +1,18 @@
-import { useState } from 'react';
-import backgroundImage from '../assets/background.jpg';
-import { AdressForm } from '../components/form.tsx';
-import { api } from '../service/api.tsx';
-import { DriversOptions } from '../components/driversOptions.tsx';
-import { Modal } from '../components/modal.tsx';
-import { ErrorRequestEstimate } from '../components/modal.tsx';
 import axios from 'axios';
+import { useState } from 'react';
+import { api } from '../service/api.tsx';
+import { Modal } from '../components/modal.tsx';
+import { History } from '../components/history.tsx';
+import { AdressForm } from '../components/form.tsx';
+import { ErrorRequest } from '../components/modal.tsx';
+import backgroundImage from '../assets/background.jpg';
+import { DriversOptions } from '../components/driversOptions.tsx';
+
+
 export interface RideConfirmSchema {
   customer_id: string;
-  origin: { latitude: number; longitude: number };
-  destination: { latitude: number; longitude: number };
+  origin: string;
+  destination: string;
   distance: number;
   duration: string;
   driver: { id: number; name: string };
@@ -19,18 +22,28 @@ export interface RideConfirmSchema {
 
 function App() {
   const [screen, setScreen] = useState<'form' | 'confirm' | 'history'>('form');
+
   const [responseEstimateRoute, setResponseEstimateRoute] = useState(null);
-  const [messegeModal, setMessegeModal] = useState<ErrorRequestEstimate | null>(null);
+  const [messegeModal, setMessegeModal] = useState<ErrorRequest | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [customer_id, setCustomer_id] = useState('');
 
   async function handleEstimateClick(origin: string, destination: string) {
     const customer_id = 'c0ead346-1714-4fea-acc5-4ad5f96c8c64';
+
     try {
-      const response = await api.post('/estimate', {
+      const bodySchemaEstimate :{ customer_id: string; origin?: string; destination?: string } ={
         customer_id,
-        origin,
-        destination,
-      });
+      }
+      if(origin){
+        bodySchemaEstimate.origin = origin;
+      }
+      if(destination){
+        bodySchemaEstimate.destination = destination;
+      }
+      console.log("bodySchemaEstimate", bodySchemaEstimate);
+      const response = await api.post('ride/estimate', bodySchemaEstimate);
+
       response.data.customer_id = customer_id;
       response.data.adressOrigin = origin;
       response.data.adressDestination = destination;
@@ -39,7 +52,6 @@ function App() {
       setScreen('confirm');
     } catch (error: unknown) {  // Tipando o erro como unknown
       console.error('Erro ao estimar rota:', error);
-  
       // Verifica se o erro é uma instância do AxiosError e possui a resposta
       if (axios.isAxiosError(error) && error.response) {
         setMessegeModal(error.response.data);
@@ -51,10 +63,21 @@ function App() {
     }
   }
 
-  function handleGoToHistorico(data: RideConfirmSchema) {
-   
+  async function handleGoToHistorico(data: RideConfirmSchema) {
     console.log('Dados da viagem confirmada:', data);
-    setScreen('history');
+    try{
+      await api.post('/ride/confirm', data);
+      const customer_id = data.customer_id;
+      setCustomer_id(customer_id);
+      setScreen('history');
+    }catch(error: unknown){
+      console.error('Erro ao requisitar rota:', error);
+      if(axios.isAxiosError(error) && error.response){
+        setMessegeModal(error.response.data);
+        setModalVisible(true);
+      }
+    }
+    
   }
 
   return (
@@ -67,8 +90,8 @@ function App() {
         <h1 className="text-4xl font-bold text-center text-yellow-500 mb-8">Taxi Shopper</h1>
         {screen === 'form' && <AdressForm onEstimateClick={handleEstimateClick} />}
         {screen === 'confirm' && <DriversOptions onGoToHistory={handleGoToHistorico} routeData={responseEstimateRoute} />}
-        {screen === 'history' && <div>Histórico (Em desenvolvimento)</div>}
-        {modalVisible && <Modal errorRequestEstimate={messegeModal!} onClose={() => setModalVisible(false)} />}
+        {screen === 'history' && <History customer_id={customer_id} />}
+        {modalVisible && messegeModal && <Modal errorRequest={messegeModal} onClose={() => setModalVisible(false)} />}
       </div>
     </div>
   );

@@ -7,7 +7,8 @@
     "knex": "node --import tsx ./node_modules/.bin/knex",
     "migrate-dev": "npm run knex -- migrate:latest --knexfile ./src/knexfile.ts",
     "seed-dev": "npm run knex -- seed:run --knexfile ./src/knexfile.ts",
-    
+    "test": "vitest",
+
     "migrate-prod": "npx knex migrate:latest --knexfile ./dist/knexfile.js",
     "seed-prod": "npx knex seed:run --knexfile ./dist/knexfile.js",
     "start": "node ./dist/server.js",
@@ -30,9 +31,12 @@
     "@types/express": "^5.0.0",
     "@types/knex": "^0.15.2",
     "@types/node": "^22.9.1",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.6"
   }
 }

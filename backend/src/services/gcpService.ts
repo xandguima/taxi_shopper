@@ -30,7 +30,12 @@ export class GoogleMapsService {
       const { data } = response;
 
       if (data.status !== "OK") {
-        throw new Error(`Erro ao obter dados de geocodificação do endereço ${address}, results: ${data.status} - ${data.error_message || "Nenhuma dado fornecido"}`);
+        throw new Error(`
+          Erro ao obter geocodificação do endereço: ${address}
+          Status do resultado: ${data.status}
+          Mensagem de erro: ${data.error_message || "Nenhum dado fornecido"}
+        `);
+        
       }
 
       if (!data.results || data.results.length === 0) {

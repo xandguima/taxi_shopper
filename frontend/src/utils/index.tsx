@@ -6,8 +6,8 @@ export function convertDuration(duration: string): string {
   const hours = minutes / 60;
 
   if (hours >= 1) {
-    return `${Math.floor(hours)}h ${Math.round((hours - Math.floor(hours)) * 60)}m`;
+    return `${Math.floor(hours)}h ${Math.round((hours - Math.floor(hours)) * 60)} min`;
   } else {
-    return `${Math.round(minutes)}m`;
+    return `${Math.round(minutes)} min`;
   }
 }

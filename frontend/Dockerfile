@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y wait-for-it
 COPY --from=build /app/dist . 
 
 # Expor a porta 80
-EXPOSE 3000
+EXPOSE 80
 
 # Rodar o servidor para servir a aplicação
 CMD ["sh", "-c", "wait-for-it api:8080 -- serve"]

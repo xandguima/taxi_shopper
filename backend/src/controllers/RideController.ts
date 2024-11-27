@@ -22,12 +22,17 @@ export class RideController {
 
       const body = checkEstimatePostSchema.parse(request.body);
 
-      const { customer_id, origin, destination } = body;
-
+      const { origin, destination } = body;
 
       //Busca as coordenadas
-      const originLatLng = await gcpService.getCoordinatesFromAddress(origin);
-      const destinationLatLng = await gcpService.getCoordinatesFromAddress(destination);
+      //console.time("buscando_coordenadas ");
+     // const originLatLng = await gcpService.getCoordinatesFromAddress(origin);
+      //const destinationLatLng = await gcpService.getCoordinatesFromAddress(destination);
+      const [originLatLng, destinationLatLng] = await Promise.all([
+        gcpService.getCoordinatesFromAddress(origin),
+        gcpService.getCoordinatesFromAddress(destination),
+      ]);
+      //console.timeEnd("buscando_coordenadas ");
 
       // Busca a rota
       const route = await gcpService.getRoute(
@@ -67,28 +72,9 @@ export class RideController {
         options: driversAcceptedRide,
         routeResponse: route,
       };
-      /*
-      const rideEstimatedCookie = {
-        origin: {
-          latitude: originLatLng.lat,
-          longitude: originLatLng.lng,
-        },
-        destination: {
-          latitude: destinationLatLng.lat,
-          longitude: destinationLatLng.lng,
-        },
-        polyline: route.polyline,
-      }
-      
-      reply.cookie('rideEstimated',JSON.stringify(rideEstimatedCookie),{
-        path: '/',
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
-      })
-      */
 
       reply.status(200).send(response);
     } catch (error) {
-
       if (error instanceof z.ZodError) {
         // Erro de validação do Zod
         reply.status(400).send({

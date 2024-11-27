@@ -38,14 +38,14 @@ interface DriversOptionsProps {
 export function DriversOptions({ onGoToHistory, routeData }: DriversOptionsProps) {
   if (!routeData) return <div>Carregando...</div>;
 
-  const { origin, destination, distance, duration, options, adressOrigin, adressDestination } = routeData;
+  const { customer_id, distance, duration, options, adressOrigin, adressDestination } = routeData;
 
   const formattedDuration = convertDuration(duration);
-  function handleSelectDriver(driver: Driver) {
+  async function handleSelectDriver(driver: Driver) {
     const rideConfirmData: RideConfirmSchema = {
-      customer_id: 'c0ead346-1714-4fea-acc5-4ad5f96c8c64',
-      origin,
-      destination,
+      customer_id: customer_id,
+      origin: adressOrigin,
+      destination: adressDestination,
       distance,
       duration,
       driver: {
@@ -54,6 +54,7 @@ export function DriversOptions({ onGoToHistory, routeData }: DriversOptionsProps
       },
       value: driver.value,
     };
+    
     onGoToHistory(rideConfirmData);
   }
 
