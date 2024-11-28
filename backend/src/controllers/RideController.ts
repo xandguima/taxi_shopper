@@ -24,15 +24,10 @@ export class RideController {
 
       const { origin, destination } = body;
 
-      //Busca as coordenadas
-      //console.time("buscando_coordenadas ");
-     // const originLatLng = await gcpService.getCoordinatesFromAddress(origin);
-      //const destinationLatLng = await gcpService.getCoordinatesFromAddress(destination);
       const [originLatLng, destinationLatLng] = await Promise.all([
         gcpService.getCoordinatesFromAddress(origin),
         gcpService.getCoordinatesFromAddress(destination),
       ]);
-      //console.timeEnd("buscando_coordenadas ");
 
       // Busca a rota
       const route = await gcpService.getRoute(
@@ -42,8 +37,7 @@ export class RideController {
         destinationLatLng.lng
       );
 
-      // Buscando motoristas e filtrando com base na distância
-      const drivers = await knex('drivers').select('*');
+      const drivers = await knex('drivers').select('*')
 
       const driversAcceptedRide = drivers
         .filter((driver) => {

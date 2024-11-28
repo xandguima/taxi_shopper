@@ -3,8 +3,6 @@ import { rideRoutes } from './routes/rideRoutes';
 import cors from '@fastify/cors';
 import { driverRoutes } from './routes/driverRoutes';
 
-
-
 export const app = fastify()
 
 app.register(cors, {

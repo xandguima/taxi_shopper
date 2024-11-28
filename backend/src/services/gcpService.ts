@@ -87,7 +87,6 @@ export class GoogleMapsService {
     };
     try {
       const response = await axios.post(GCP_DIRECTION_URL, requestBody, { headers });
-     
       return response.data.routes[0];
     } catch (error) {
       if (error instanceof Error) {

@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: taxi_shopper_api
     environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY} # Variável de ambiente com a chave da API do Google
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     ports:
       - "8080:8080" # Mapeando a porta 8080
     networks:
@@ -17,11 +17,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: taxi_shopper_frontend
+   
     ports:
       - "80:3000"
     depends_on:
       - api # Garantir que a API tenha iniciado antes de iniciar o frontend
-    entrypoint: ["sh", "-c", "wait-for-it api:8080 -- serve "]
+    entrypoint: ["sh", "-c", "wait-for-it api:8080 -- serve"]
     restart: always
     networks:
       - api_routes_network

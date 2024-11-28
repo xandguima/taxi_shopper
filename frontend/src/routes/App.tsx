@@ -28,18 +28,28 @@ function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [customer_id, setCustomer_id] = useState('');
 
-  async function handleEstimateClick(origin: string, destination: string) {
-    const customer_id = 'c0ead346-1714-4fea-acc5-4ad5f96c8c64';
+  async function handleEstimateClick(origin: string, destination: string, customer_id: string) {
 
     try {
-      const bodySchemaEstimate :{ customer_id: string; origin?: string; destination?: string } ={
-        customer_id,
+      const bodySchemaEstimate: { origin?: string; destination?: string, customer_id?: string } = {}; 
+
+      
+      if (customer_id) {
+        bodySchemaEstimate.customer_id = customer_id;
       }
-      if(origin){
+      if (origin) {
         bodySchemaEstimate.origin = origin;
       }
-      if(destination){
+      if (destination) {
         bodySchemaEstimate.destination = destination;
+      }
+      if(!bodySchemaEstimate.origin || !bodySchemaEstimate.destination || !bodySchemaEstimate.customer_id){
+        setMessegeModal({
+          error_code: "REQUIRED_FIELDS",
+          error_description: "Todos os campos devem ser preenchidos"
+        })
+        setModalVisible(true);
+        return
       }
       console.log("bodySchemaEstimate", bodySchemaEstimate);
       const response = await api.post('ride/estimate', bodySchemaEstimate);
@@ -50,14 +60,12 @@ function App() {
 
       setResponseEstimateRoute(response.data);
       setScreen('confirm');
-    } catch (error: unknown) {  // Tipando o erro como unknown
+    } catch (error: unknown) {  
       console.error('Erro ao estimar rota:', error);
-      // Verifica se o erro é uma instância do AxiosError e possui a resposta
       if (axios.isAxiosError(error) && error.response) {
         setMessegeModal(error.response.data);
         setModalVisible(true);
       } else {
-        // Tratamento genérico de erro, caso o erro não seja relacionado ao Axios
         console.error('Erro desconhecido:', error);
       }
     }
@@ -65,19 +73,19 @@ function App() {
 
   async function handleGoToHistorico(data: RideConfirmSchema) {
     console.log('Dados da viagem confirmada:', data);
-    try{
-      await api.post('/ride/confirm', data);
+    try {
+      await api.patch('/ride/confirm', data);
       const customer_id = data.customer_id;
       setCustomer_id(customer_id);
       setScreen('history');
-    }catch(error: unknown){
+    } catch (error: unknown) {
       console.error('Erro ao requisitar rota:', error);
-      if(axios.isAxiosError(error) && error.response){
+      if (axios.isAxiosError(error) && error.response) {
         setMessegeModal(error.response.data);
         setModalVisible(true);
       }
     }
-    
+
   }
 
   return (
@@ -91,7 +99,7 @@ function App() {
         {screen === 'form' && <AdressForm onEstimateClick={handleEstimateClick} />}
         {screen === 'confirm' && <DriversOptions onGoToHistory={handleGoToHistorico} routeData={responseEstimateRoute} />}
         {screen === 'history' && <History customer_id={customer_id} />}
-        {modalVisible && messegeModal && <Modal errorRequest={messegeModal} onClose={() => setModalVisible(false)} />}
+        {modalVisible && messegeModal && <Modal errorMessage={messegeModal.error_code} errorDetails={messegeModal.error_description} onClose={() => setModalVisible(false)} />}
       </div>
     </div>
   );

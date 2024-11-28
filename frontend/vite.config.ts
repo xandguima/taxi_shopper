@@ -1,12 +1,21 @@
 import { defineConfig } from 'vite'
+import dotenv from 'dotenv';
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+dotenv.config();
 export default defineConfig({
   server: {
-    port: 3000,
+    port: 80,
     host: '0.0.0.0',
     strictPort: true
   },
-  plugins: [react()]
+  plugins: [react()],
+  define: {
+    'process.env.GOOGLE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY), // Expose the variable
+  },
+  logLevel: 'warn',
 })
+
+
+
+

@@ -1,5 +1,4 @@
 
-
 export function convertDuration(duration: string): string {
   const seconds = parseInt(duration.replace('s', ''));
   const minutes = seconds / 60;
