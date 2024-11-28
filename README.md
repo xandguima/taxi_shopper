@@ -10,8 +10,8 @@ Basta baixar o repositório e criar um .env na raiz do projeto de acordo com a v
 ```
 docker compose up
 ```
-As aplicações estão disponiveis na portas 80 e 8080
-Api - localhost:8080
+As aplicações estão disponiveis na portas 80 e 8080<br>
+Api - localhost:8080<br>
 front- localhost:80
 
 Caso queira analisar o front ou back leia as instruções a seguir:
